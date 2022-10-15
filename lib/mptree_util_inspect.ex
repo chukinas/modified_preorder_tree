@@ -1,4 +1,4 @@
-defmodule Statechart.Util.Inspect do
+defmodule MPTree.Util.Inspect do
   @moduledoc false
   # Functions for building more readable output with using `IO.inspect/2` and `IO.inspect/3`.
 
@@ -23,11 +23,11 @@ defmodule Statechart.Util.Inspect do
   @doc """
   Example usage:
       defmodule MyModule do
-        use Redline.Util.Inspect, name: "CoolStruct", keys: ~w/third first/a
+        use MPTree.Util.Inspect, name: "MyStruct", keys: ~w/third first/a
         defstruct [:first, :second, :third]
       end
   When inspected, will look something like:
-      #CoolStruct<third: 3, first: 1>
+      #MyStruct<third: 3, first: 1>
   options:
   - `name` - optional. Defaults to last part of module name.
   - `keys` - optional. Defaults to all keys
