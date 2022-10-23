@@ -26,7 +26,7 @@ defmodule MPTree.NodeMeta do
   def __starting_lft__, do: @starting_lft
 
   defimpl Inspect do
-    def inspect(m, inspect_opts) do
+    def inspect(m, _opts) do
       "#NodeMeta<#{m.id}, {#{m.lft}, #{m.rgt}}>"
     end
   end
