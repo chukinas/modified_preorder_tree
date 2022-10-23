@@ -7,7 +7,7 @@ This package can be installed by adding `modified_preorder_tree` to your list of
 ```elixir
 def deps do
   [
-    {:modified_preorder_tree, "~> 0.1.0"}
+    {:modified_preorder_tree, "~> 0.1.1"}
   ]
 end
 ```
