@@ -21,7 +21,7 @@ end
 - https://gist.github.com/tmilos/f2f999b5839e2d42d751
 
 
-## Functions Organized by CRC
+## `MPTree` API
 
 - Constructors
   - `from_node/1`

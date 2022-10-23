@@ -1,4 +1,4 @@
-defmodule Statechart.MixProject do
+defmodule MPTree.MixProject do
   use Mix.Project
 
   @project_name :modified_preorder_tree
@@ -37,7 +37,7 @@ defmodule Statechart.MixProject do
       package: package(),
       description: """
       Modified Preorder Tree Traversal Data Structure
-      """,
+      """
     ]
   end
 
