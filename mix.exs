@@ -7,7 +7,7 @@ defmodule MPTree.MixProject do
   def project do
     [
       app: @project_name,
-      version: "0.1.1",
+      version: "0.2.0",
       aliases: aliases(),
       preferred_cli_env: [
         check: :test,
@@ -21,17 +21,7 @@ defmodule MPTree.MixProject do
       # Docs
       name: "MPTree",
       source_url: @repo_url,
-      docs: [
-        authors: ["Jonathan Chukinas"],
-        formatters: ["html"],
-        # groups_for_functions: [
-        #   Constructors: &(&1[:crc] == :constructor),
-        #   Reducers: &(&1[:crc] == :reducer),
-        #   Converters: &(&1[:crc] == :converter),
-        #   Helpers: &(&1[:crc] == :helper)
-        # ],
-        main: "MPTree"
-      ],
+      docs: docs(),
 
       # Package
       package: package(),
@@ -46,6 +36,7 @@ defmodule MPTree.MixProject do
       name: @project_name,
       licenses: ["MIT"],
       links: %{
+        # LATER add
         # "Changelog" => "tbd"
         "GitHub" => @repo_url
       }
@@ -70,10 +61,25 @@ defmodule MPTree.MixProject do
 
   defp deps do
     [
+      # Project Dependencies
+      {:typed_struct, "~> 0.2.1"},
+
+      # Development and test dependencies
       {:dialyxir, "~>1.1", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:stream_data, "~>0.5", only: [:dev, :test]},
-      {:typed_struct, "~> 0.2.1"}
+
+      # Documentation dependencies
+      {:ex_doc, "~> 0.29", only: :dev, runtime: false}
+    ]
+  end
+
+  defp docs do
+    [
+      assets: "assets",
+      authors: ["Jonathan Chukinas"],
+      extras: ["CHANGELOG.md"],
+      formatters: ["html"],
+      main: "MPTree"
     ]
   end
 end

@@ -12,14 +12,23 @@ def deps do
 end
 ```
 
+## Concepts
+
 <!--- StateChart moduledoc start -->
 
-## What is MPTT (Modified Preorder Tree Traversal?)
+![base tree](assets/tree_base.svg)
 
-- https://imrannazar.com/Modified-Preorder-Tree-Traversal
-- https://www.atlantis-press.com/article/125938811.pdf
-- https://gist.github.com/tmilos/f2f999b5839e2d42d751
+Numbers are assigned such that a path can be traced around the tree,
+taking in every node.
+The path here starts at `root`, flowing down the left,
+around the bottom of the `b` subtree, then up to the `e` branch of `a`,
+and from there to the other branches of `root`, before flowing back to `root`.
 
+Leaf nodes (those with no children) have Left and Right values immediately after each other;
+`f`, for example, is 11/12.
+The parent of a node has a smaller Left and a bigger Right;
+which can be used to trace up the tree finding parent nodes,
+until you hit a Left of 0 (meaning the root node).
 
 ## `MPTree` API
 
@@ -31,12 +40,20 @@ end
   - `update_nodes/2`
   - `update_nodes/3`
 - Converters
+  - `fetch_ancestors_and_self/2`
+  - `fetch_ancestors_and_self!/2`
   - `fetch_children/2`
   - `fetch_children!/2`
   - `fetch_descendents/2`
   - `fetch_descendents!/2`
+  - `fetch_family_tree/2`
+  - `fetch_family_tree!/2`
+  - `fetch_node/2`
+  - `fetch_node!/2`
   - `fetch_parent/2`
   - `fetch_parent!/2`
+  - `fetch_transition_path/3`
+  - `fetch_transition_path!/3`
   - `nodes/1`
 
 <!--- StateChart moduledoc end -->

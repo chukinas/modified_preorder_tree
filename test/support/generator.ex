@@ -34,7 +34,6 @@ defmodule MPTree.TestSupport.Generator do
     end)
   end
 
-  # TODO DRY this out
   defp match_by_id(id) do
     &(Node.__id__(&1) == id)
   end
