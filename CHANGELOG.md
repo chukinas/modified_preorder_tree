@@ -5,11 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [0.2.0] - 2022-11-07
 
 ### Fixed
 
 * Remove unused "inspect_opts" variable
+
+### Added
+
+* `MPTree.fetch_family_tree/2`
+* `MPTree.fetch_family_tree!/2`
+* `MPTree.fetch_node/2`
+* `MPTree.fetch_node!/2`
+* `MPTree.fetch_ancestors_and_self/2`
+* `MPTree.fetch_ancestors_and_self!/2`
+* `MPTree.fetch_transition_path/3`
+* `MPTree.fetch_transition_path!/3`
 
 ## [0.1.1] - 2022-10-23
 

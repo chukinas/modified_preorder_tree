@@ -11,7 +11,35 @@ defmodule MPTreeTest do
     end
   end
 
-  describe "MPTree.fetch_descendents!/1 ..." do
+  defp random_node_match_fn(tree) do
+    case MPTree.nodes(tree) do
+      [] -> fn _ -> true end
+      nodes -> Enum.random(nodes).match
+    end
+  end
+
+  defp no_match_fn(), do: fn _ -> false end
+
+  describe "fetch_ancestors_and_self/2" do
+    property "returns ok tuple if match_fn finds no matches" do
+      check all tree <- Generator.tree() do
+        match_fn = random_node_match_fn(tree)
+        assert {:ok, nodes} = MPTree.fetch_ancestors_and_self(tree, match_fn)
+        assert length(nodes) > 0
+        assert nodes == MPTree.fetch_ancestors_and_self!(tree, match_fn)
+      end
+    end
+  end
+
+  property "converter functions return error if match_fn finds no matches" do
+    check all tree <- Generator.tree() do
+      match_fn = no_match_fn()
+      assert :error = MPTree.fetch_ancestors_and_self(tree, match_fn)
+      assert :error = MPTree.fetch_children(tree, match_fn)
+    end
+  end
+
+  describe "fetch_descendents!/1 ..." do
     property "has number of elements equal to Node.__count_descendents__/1" do
       check all tree <- Generator.tree() do
         for node <- MPTree.nodes(tree) do
@@ -30,6 +58,34 @@ defmodule MPTreeTest do
           actual_descendent_count = tree |> MPTree.fetch_descendents!(node.match) |> length
           assert expected_descendent_count == actual_descendent_count
         end
+      end
+    end
+  end
+
+  property "fetch_family_tree/2" do
+    check all tree <- Generator.tree() do
+      match_fn =
+        Enum.random([
+          no_match_fn(),
+          random_node_match_fn(tree)
+        ])
+
+      expected_result =
+        with {:ok, path} <- MPTree.fetch_ancestors_and_self(tree, match_fn),
+             {:ok, descendents} <- MPTree.fetch_descendents(tree, match_fn) do
+          {:ok, path ++ descendents}
+        end
+
+      assert MPTree.fetch_family_tree(tree, match_fn) == expected_result
+    end
+  end
+
+  describe "fetch_node/2" do
+    property "finds same match as fetch_node!/2" do
+      check all tree <- Generator.tree() do
+        match_fn = random_node_match_fn(tree)
+        assert {:ok, node} = MPTree.fetch_node(tree, match_fn)
+        assert node == MPTree.fetch_node!(tree, match_fn)
       end
     end
   end
