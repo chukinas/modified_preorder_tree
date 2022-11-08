@@ -2,29 +2,29 @@ defmodule MPTree.Node do
   @moduledoc """
   A Tree is made of many nodes. Here is one.
 
-  A valid `MPTree` node is a map with a `:__mptree_meta__` key holding a value of `t:meta/0`.
+  A valid `MPTree` node is a map with a `:__mptree_node__` key holding a value of `t:meta/0`.
   Here is the absolute minimal node you can build:
 
   ```
-  my_node = %{__mptree_meta__: init()}
+  my_node = %{__mptree_node__: init()}
   ```
 
   Here's a node implemented as a struct:
 
   ```
   defmodule MyNode do
-    defstruct [:name, __mptree_meta__: init()]
+    defstruct [:name, __mptree_node__: init()]
 
     @type t :: %__MODULE__{
       name: String.t(),
-      __mptree_meta__: MPTree.Node.meta()
+      __mptree_node__: MPTree.Node.meta()
     }
 
     new(name), do: %__MODULE__{name: name}
   end
 
   iex> MyNode.new("hello")
-  %MyNode{name: "hello", __mptree_meta__: _}
+  %MyNode{name: "hello", __mptree_node__: _}
   ```
 
   If you're a fan of the excellent little `TypedStruct` library,
@@ -45,7 +45,7 @@ defmodule MPTree.Node do
   end
 
   iex> MyNode.new("hello")
-  %MyNode{name: "hello", __mptree_meta__: _}
+  %MyNode{name: "hello", __mptree_node__: _}
   ```
 
   But it would be easier if you just used the
@@ -60,7 +60,7 @@ defmodule MPTree.Node do
   """
   @opaque meta :: NodeMeta.t()
 
-  @type t :: %{required(:__mptree_meta__) => meta(), optional(any()) => any()}
+  @type t :: %{required(:__mptree_node__) => meta(), optional(any()) => any()}
 
   #####################################
   # PLUGIN
@@ -68,7 +68,7 @@ defmodule MPTree.Node do
   @impl TypedStruct.Plugin
   defmacro init(_) do
     quote do
-      field :__mptree_meta__, MPTree.NodeMeta.t(), default: MPTree.Node.init()
+      field :__mptree_node__, MPTree.NodeMeta.t(), default: MPTree.Node.init()
     end
   end
 
@@ -77,7 +77,7 @@ defmodule MPTree.Node do
 
   # Increase `lft` and/or `rgt` if they're greater than or equal to the `threshold`
   def __incr_lft_rgt__(
-        %{__mptree_meta__: %NodeMeta{lft: lft, rgt: rgt} = meta} = node,
+        %{__mptree_node__: %NodeMeta{lft: lft, rgt: rgt} = meta} = node,
         increment_by,
         threshold \\ 0
       ) do
@@ -88,50 +88,50 @@ defmodule MPTree.Node do
         true -> nil
       end
 
-    if meta, do: %{node | __mptree_meta__: meta}, else: node
+    if meta, do: %{node | __mptree_node__: meta}, else: node
   end
 
-  def __incr_id__(%{__mptree_meta__: %NodeMeta{} = meta} = node, increment_by) do
+  def __incr_id__(%{__mptree_node__: %NodeMeta{} = meta} = node, increment_by) do
     meta = Map.update!(meta, :id, &(&1 + increment_by))
-    %{node | __mptree_meta__: meta}
+    %{node | __mptree_node__: meta}
   end
 
   #####################################
   # CONVERTERS
 
   def __ancestor_and_descendent__?(
-        %{__mptree_meta__: %NodeMeta{} = ancestor},
-        %{__mptree_meta__: %NodeMeta{} = descendent}
+        %{__mptree_node__: %NodeMeta{} = ancestor},
+        %{__mptree_node__: %NodeMeta{} = descendent}
       ) do
     ancestor.lft < descendent.lft && descendent.rgt < ancestor.rgt
   end
 
   def __siblings__?(
-        %{__mptree_meta__: %NodeMeta{} = brother},
-        %{__mptree_meta__: %NodeMeta{} = sister}
+        %{__mptree_node__: %NodeMeta{} = brother},
+        %{__mptree_node__: %NodeMeta{} = sister}
       ) do
     brother.rgt + 1 == sister.lft || sister.rgt + 1 == brother.lft
   end
 
   def __parent_and_last_child__?(
-        %{__mptree_meta__: %NodeMeta{} = parent},
-        %{__mptree_meta__: %NodeMeta{} = child}
+        %{__mptree_node__: %NodeMeta{} = parent},
+        %{__mptree_node__: %NodeMeta{} = child}
       ) do
     child.rgt + 1 == parent.rgt
   end
 
   @doc false
-  def __leaf__?(%{__mptree_meta__: %NodeMeta{lft: lft, rgt: rgt}}) do
+  def __leaf__?(%{__mptree_node__: %NodeMeta{lft: lft, rgt: rgt}}) do
     lft + 1 == rgt
   end
 
-  def __id__(%{__mptree_meta__: %NodeMeta{id: val}}), do: val
-  def __lft__(%{__mptree_meta__: %NodeMeta{lft: val}}), do: val
-  def __rgt__(%{__mptree_meta__: %NodeMeta{rgt: val}}), do: val
-  def __rgt_less_than__(%{__mptree_meta__: %NodeMeta{rgt: rgt}}, threshold), do: rgt < threshold
+  def __id__(%{__mptree_node__: %NodeMeta{id: val}}), do: val
+  def __lft__(%{__mptree_node__: %NodeMeta{lft: val}}), do: val
+  def __rgt__(%{__mptree_node__: %NodeMeta{rgt: val}}), do: val
+  def __rgt_less_than__(%{__mptree_node__: %NodeMeta{rgt: rgt}}, threshold), do: rgt < threshold
 
   @spec __lft_rgt__(t()) :: {NodeMeta.lft(), NodeMeta.rgt()}
-  def __lft_rgt__(%{__mptree_meta__: %NodeMeta{lft: lft, rgt: rgt}}), do: {lft, rgt}
+  def __lft_rgt__(%{__mptree_node__: %NodeMeta{lft: lft, rgt: rgt}}), do: {lft, rgt}
 
   @spec __count_self_and_descendents__(t()) :: pos_integer
   def __count_self_and_descendents__(node) do
@@ -150,7 +150,7 @@ defmodule MPTree.Node do
 
   @doc """
   When creating your nodes, and before inserting into a tree,
-  ensure it has a `:__mptree_meta__` key with the value from `init/0` assigned to it.
+  ensure it has a `:__mptree_node__` key with the value from `init/0` assigned to it.
   """
   def init, do: NodeMeta.new()
 end

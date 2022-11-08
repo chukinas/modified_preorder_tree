@@ -64,8 +64,8 @@ defmodule MPTree do
   Create a tree from a [`root_node`](`MPTree.Node`).
   """
   @spec from_node(Node.t()) :: t()
-  def from_node(%{__mptree_meta__: %NodeMeta{}} = root_node) do
-    node_with_default_meta = Map.replace!(root_node, :__mptree_meta__, NodeMeta.new())
+  def from_node(%{__mptree_node__: %NodeMeta{}} = root_node) do
+    node_with_default_meta = Map.replace!(root_node, :__mptree_node__, NodeMeta.new())
     %__MODULE__{nodes: [node_with_default_meta]}
   end
 
@@ -87,7 +87,7 @@ defmodule MPTree do
   @spec insert(t(), Node.t() | t(), match_fn()) :: {:ok, t()} | :error
   def insert(tree, node_or_tree, parent_fn)
 
-  def insert(%__MODULE__{} = tree, %{__mptree_meta__: %NodeMeta{}} = node, parent_fn)
+  def insert(%__MODULE__{} = tree, %{__mptree_node__: %NodeMeta{}} = node, parent_fn)
       when is_function(parent_fn, 1) do
     subtree = from_node(node)
     insert(tree, subtree, parent_fn)
