@@ -13,10 +13,11 @@ defmodule MPTree.MixProject do
         check: :test,
         c: :test
       ],
-      elixir: "~> 1.13",
+      elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      dialyzer: dialyzer(),
 
       # Docs
       name: "MPTree",
@@ -80,6 +81,13 @@ defmodule MPTree.MixProject do
       extras: ["CHANGELOG.md"],
       formatters: ["html"],
       main: "MPTree"
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_core_path: "tmp/plts",
+      plt_file: {:no_warn, "tmp/plts/dialyzer.plt"}
     ]
   end
 end

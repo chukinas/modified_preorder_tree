@@ -31,9 +31,30 @@ jobs:
         path: deps
         key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
         restore-keys: ${{ runner.os }}-mix-
+
     - name: Install dependencies
       run: mix deps.get
+
     - name: Check Formatting
       run: mix format --check-formatted
+
     - name: Run tests
       run: mix test
+
+    - name: Retrieve PLT Cache
+      uses: actions/cache@v1
+      id: plt-cache
+      with:
+        path: tmp/plts
+        key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+
+    - name: Create PLTs
+      if: steps.plt-cache.outputs.cache-hit != 'true'
+      run: |
+        mkdir -p tmp/plts
+        mix dialyzer --plt
+
+    - name: Run dialyzer
+      run: mix dialyzer --no-check --halt-exit-status
+
+# https://hashrocket.com/blog/posts/build-the-ultimate-elixir-ci-with-github-actions
