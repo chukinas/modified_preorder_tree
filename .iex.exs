@@ -6,7 +6,7 @@ build_node = fn name ->
   %{
     name: name,
     match: &(&1.name == name),
-    __mptree_meta__: MPTree.Node.init()
+    __mptree_node__: MPTree.Node.init()
   }
 end
 

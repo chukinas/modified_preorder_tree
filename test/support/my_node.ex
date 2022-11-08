@@ -1,7 +1,7 @@
 defmodule MPTree.TestSupport.MyNode do
   @moduledoc false
   use TypedStruct
-  use MPTree.Util.Inspect, name: "MyNode", keys: ~w/name parent_id __mptree_meta__/a
+  use MPTree.Util.Inspect, name: "MyNode", keys: ~w/name parent_id __mptree_node__/a
   alias MPTree.Node
   alias MPTree.NodeMeta
 

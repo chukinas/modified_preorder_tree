@@ -7,7 +7,7 @@ defmodule MPTree.NodeTest do
     use TypedStruct
 
     typedstruct enforce: true do
-      field :__mptree_meta__, NodeMeta.t(), default: NodeMeta.new()
+      field :__mptree_node__, NodeMeta.t(), default: NodeMeta.new()
     end
 
     def new, do: %__MODULE__{}
